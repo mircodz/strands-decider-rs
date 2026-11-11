@@ -1,0 +1,32 @@
+[package]
+name = "strands-decider-rs"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+description = "Strands Decider 2B on the GPU (Metal, Vulkan, DX12) through wgpu"
+publish = false
+
+[lib]
+name = "strands_decider"
+
+[dependencies]
+# GPU: one set of WGSL kernels for Metal (macOS), Vulkan (Linux, Windows) and DX12 (Windows).
+wgpu = { version = "30", default-features = false, features = ["std", "wgsl", "metal", "vulkan", "dx12"] }
+# Downloading the model: Hugging Face's client, on ureq and rustls.
+hf-hub = { version = "0.4.3", default-features = false, features = ["ureq"] }
+# Already in wgpu's dependency tree.
+bytemuck = "1.25.2"
+half = "2.7.1"
+# Parsing: manifest, tokenizer and requests (JSON), the gzipped downloads, the tokenizer's
+# pre-tokenizer regex and NFC normalizer, and the command line.
+fancy-regex = "0.20.1"
+flate2 = "1.1.11"
+lexopt = "0.3.2"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
+unicode-normalization = "0.1.26"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
